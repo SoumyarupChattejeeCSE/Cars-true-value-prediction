@@ -1,0 +1,226 @@
+---
+title: "Exploratory Data Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Name : Soumyarup Chatterjee
+## Registration Number : 19BCE1031
+
+## Name : Aditi Agarwal
+## Registration Number : 19BCE1159
+
+
+## EDA in R for cars_true_value_clean.csv dataset :- 
+
+
+### To read cars_true_value_clean.csv :
+```{r}
+library(MASS)
+library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+df<-read.csv("cars_true_value_clean.csv")
+```
+
+### Frequency distribution of second hand cars sold by companies :
+```{r}
+#Frequency distribution:
+table(df$make)
+
+#Bar Plot to represent the frequency distribution of used cars sold by companies :
+ggplot(data=df, aes(x=make,fill=make))+geom_bar()+ggtitle("Frequency distribution of used cars sold by companies")
+
+#Inference: Most of the second hand cars which has been sold in the market belongs to the automobile company, Maruti.The least number of second hand cars sold,were manufactured by the company, Volvo.
+```
+
+
+### Frequency distribution of the quality or the rating of second hand cars sold :
+```{r}
+#Frequency distribution:
+table(df$car_rating)
+
+#Bar Plot to represent the frequency distribution of quality of used cars sold by companies :
+ggplot(data=df, aes(x=car_rating,fill=car_rating))+geom_bar()+ggtitle("Frequency distribution of quality of used cars sold by companies")
+
+#Inference: We can see from the barplot above that most of the second hand cars sold had a great car rating or a positive car rating.
+
+```
+
+
+### Price distributuiion of second hand cars sold :
+```{r}
+
+#Histogram to represent price distribution of used cars sold :
+hist(df$sale_price,main="Price distribution of used cars",xlab="Sale price",col="green")
+
+#Inference: We can observe that, most of the used cars or second hand cars were sold in the range of 100000 and 1000000 and there have been very few cars which have been sold over 1500000. 
+
+```
+
+## TRANSMISSION TYPE :
+
+### Frequency distribution of of second hand cars sold based on transmission type :
+```{r}
+#Frequency distribution:
+table(df$transmission)
+
+#Pie chart to represent the frequency distribution of transmission type of used cars sold :
+
+pie(table(df$transmission),main="Frequency distribution of transmission type of used cars sold",col=c("Orange","Green"))
+legend("topright", legend = c("automatic","manual"),fill =  c("Orange","Green"))
+
+#Inference: We can observe that, the "second hand cars" market market is primarily a manual transmission market as we can see that most of the second hand cars sold are of manual transmission type, 
+
+```
+
+### Price distribution of manual vs automatic used cars :
+```{r}
+
+#Histogram to represent price distribution of manual vs automatic used cars  :
+p_man=filter(df,transmission=="manual")
+p_aut=filter(df,transmission=="automatic")
+
+hist(p_man$sale_price,main="Price distribution of manual used cars",xlab="Sale price",col="cyan")
+hist(p_aut$sale_price,main="Price distribution of automatic used cars",xlab="Sale price",col="yellow")
+
+ggplot(df, aes(x=transmission, y=sale_price, fill=transmission)) + geom_boxplot()
+
+#Inference: We can observe that price of automatic cars are more than price of manual cars and we can see outliers in both types of cars' sale price plot.
+
+```
+
+## BODY TYPE :
+
+### Frequency distribution of of used cars sold based on bodytype (eg: sedan,suv etc.):
+```{r}
+#Frequency distribution:
+table(df$body_type)
+
+#Pie chart to represent the frequency distribution of body type of used cars sold :
+
+pie(table(df$body_type),main="Frequency distribution of body type of used cars sold",col=c("Orange","Green","Pink","Light Blue","Yellow"))
+legend("topright", legend = c("hatchback","luxury sedan","luxury suv","sedan","suv"),fill =  c("Orange","Green","Pink","Light Blue","Yellow"))
+
+#Inference: We can observe that, most of the used cars sold are of hatchback type so it is appropriate to say tnat hatchback cars are in huge demand in the automobile market, 
+
+```
+
+### Price ditribution of used cars based on bodytype (eg: hatchback,sedan,suv etc.) :
+```{r}
+
+#Histogram to represent price distribution of used cars based on body type  :
+hatchback=filter(df,body_type=="hatchback")
+luxury_sedan=filter(df,body_type=="luxury sedan")
+luxury_suv=filter(df,body_type=="luxury suv")
+sedan=filter(df,body_type=="sedan")
+suv=filter(df,body_type=="suv")
+
+hist(hatchback$sale_price,main="Price distribution of hatchback cars",xlab="Sale price",col = "orange")
+hist(luxury_sedan$sale_price,main="Price distribution of luxury sedan cars",xlab="Sale price",col = "green")
+hist(luxury_suv$sale_price,main="Price distribution of luxury suv cars",xlab="Sale price",col = "yellow")
+hist(sedan$sale_price,main="Price distribution of sedan cars",xlab="Sale price",col = "cyan")
+hist(suv$sale_price,main="Price distribution of suv cars",xlab="Sale price",col = "red")
+
+ggplot(df, aes(x=body_type, y=sale_price, fill=body_type)) + geom_boxplot()
+
+#Inference: We can observe that price of luxury suv cars are more than the price of all other cars of different bodytype and we can see outliers in all the types of cars' sale price plot.
+
+```
+
+## FUEL TYPE :
+
+### Frequency distribution of of used cars sold based on fuel type :
+```{r}
+#Frequency distribution:
+table(df$fuel_type)
+
+#Bar chart to represent the frequency distribution of body type of used cars sold :
+
+barplot(table(df$fuel_type),main="Frequency distribution of fuel type of used cars",col=c("Orange","Yellow","Green","Pink","Light Blue"))
+legend("topright", legend = c("diesel","electric","petrol","petrol & cng","petrol & lpg"),fill =  c("Orange","Yellow","Green","Pink","Light Blue"))
+
+#Inference: We can observe that most of the second hand cars which have been sold over the past years run on petrol and there have been very few cars sold which run via electricity consumption.
+
+```
+
+### Price ditribution of used cars based on fuel type :
+```{r}
+diesel=filter(df,fuel_type=="diesel")
+electric=filter(df,fuel_type=="electric")
+petrol=filter(df,fuel_type=="petrol")
+petrol_cng=filter(df,fuel_type=="petrol & cng")
+petrol_lpg=filter(df,fuel_type=="petrol & lpg")
+
+hist(diesel$sale_price,main="Price distribution of diesel cars",xlab="Sale price",col = "orange")
+hist(electric$sale_price,main="Price distribution of electric cars",xlab="Sale price",col = "green")
+hist(petrol$sale_price,main="Price distribution of petrol cars",xlab="Sale price",col = "yellow")
+hist(petrol_cng$sale_price,main="Price distribution of cars running on petrol and cng",xlab="Sale price",col = "cyan")
+hist(petrol_lpg$sale_price,main="Price distribution of cars running on petrol and lpg",xlab="Sale price",col = "red")
+
+ggplot(df, aes(x=fuel_type, y=sale_price, fill=fuel_type)) + geom_boxplot()
+
+#Inference: We can observe that the cars running on diesel have been sold at a higher sale price than the cars running on other types of fuel.
+
+```
+
+## Relationship:
+
+### Relationsip between sale price and original price of cars ,kilometers ran by cars, broker quota price of cars,number of previous owners of the cars using scatterplot matrix and correlation :
+```{r}
+pairs(df$sale_price~df$original_price+df$kms_run+df$broker_quote+df$total_owners+df$emi_starts_from)
+
+#Relationship between sale price and original price of cars :
+cor(df$sale_price,df$original_price)
+ggplot(df,aes(x=original_price,y=sale_price))+geom_point()+geom_smooth(method=lm)
+
+#Inference: We can observe that the sale price the second hand cars increase with increase in original price of the cars and from the correlation value we can observe that there exists a strong positive relationship between sale price and original price of cars.
+
+
+
+#Relationship between sale price and distance traveled by cars :
+cor(df$sale_price,df$kms_run)
+ggplot(df,aes(x=kms_run,y=sale_price))+geom_point()+geom_smooth(method=lm)
+
+#Inference: We can observe that the sale price of car decreases with increase in distance covered by car(in kms) and from the correlation value we can observe that there exists a poor negative relationship between sale price and the distance covered by cars.
+
+
+
+#Relationship between sale price and broker price of cars :
+cor(df$sale_price,df$broker_quote)
+ggplot(df,aes(x=broker_quote,y=sale_price))+geom_point()+geom_smooth(method=lm)
+
+#Inference: We can observe that the sale price the second hand cars increase with increase in broker quota price of the cars and from the correlation value we can observe that there exists a strong positive relationship between sale price and broker quota price of cars.
+
+
+#Relationship between sale price and number of previous owners of the cars :
+cor(df$sale_price,df$total_owners)
+ggplot(df,aes(x=total_owners,y=sale_price))+geom_point()+geom_smooth(method=lm)
+
+#Inference: We can observe that the sale price are gradually more for those cars which have less number of owners who previous owned those cars.
+
+
+
+#Relationship between sale price and number of previous owners of the cars :
+cor(df$sale_price,df$emi_starts_from)
+ggplot(df,aes(x=emi_starts_from,y=sale_price))+geom_point()+geom_smooth(method=lm)
+
+#Inference: We can observe that the sale price of the cars and the emi of those cars are strongly positively correlated .
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,367 @@
+---
+title: "Data Cleaning and Imputation"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Name : Soumyarup Chatterjee
+## Registration Number : 19BCE1031
+
+## Name : Aditi Agarwal
+## Registration Number : 19BCE1159
+
+
+## Data Cleaning and Imputation in R for train.csv datast :- 
+
+
+### 1. To read train.csv :
+```{r}
+d<-read.csv("cars_true_value.csv")
+```
+
+### 2. To choose first 10 row of data for displaying data set before cleaning :
+```{r}
+old_d<-d
+#displaying data set before cleaning(top 7 rows to make it look less clumsy)
+print(old_d[1:10,])
+```
+
+### 3.Replacing all blank values with NA   :
+```{r}
+d[d == ""] <- NA
+d1<-d
+print(head(d,10))
+```
+
+### 4. Replacing NA values in yr_mfr column with median value in that column :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$yr_mfr)))
+
+#replacing NA values in d1 data set with 0 to find median
+d1$yr_mfr[which(is.na(d1$yr_mfr))]<-0
+d1$yr_mfr <- as.integer(d1$yr_mfr) 
+m<-median(d1$yr_mfr)
+d$yr_mfr[which(is.na(d$yr_mfr))]<-m
+d$yr_mfr[which(is.na(d$yr_mfr))]<-0
+d$yr_mfr<- as.integer(d$yr_mfr) 
+m<-median(d1$yr_mfr)
+#Median yr_mfr value:
+print(m)
+#replacing the NA value in d data set with median value
+d$yr_mfr[which(is.na(d$yr_mfr))]<-m
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$yr_mfr)))
+
+```
+
+### 5. Replacing NA values in fuel_type with value occuring max times in that column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$fuel_type)))
+
+#To find the value occurring max times in fuel_type column
+t <- na.omit(unique(d$fuel_type))
+h<-t[which.max(tabulate(match(d$fuel_type, t)))]
+#replacing the NA value in d data set with value occurring max times
+d$fuel_type[which(is.na(d$fuel_type))]<-h
+print(h)
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$fuel_type)))
+```
+
+### 6. Replacing NA values in  kms_run column with median value in that column :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$kms_run)))
+
+#replacing NA values in d1 data set with 0 to find median
+d1$kms_run[which(is.na(d1$kms_run))]<-0
+d1$kms_run <- as.integer(d1$kms_run) 
+m<-median(d1$kms_run)
+d$kms_run[which(is.na(d$kms_run))]<-m
+d1$kms_run[which(is.na(d1$kms_run))]<-0
+d1$kms_run <- as.integer(d1$kms_run) 
+m<-median(d1$kms_run)
+#Median kms_run value:
+print(m)
+#replacing the NA value in d data set with median value
+d$kms_run[which(is.na(d$kms_run))]<-m
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$kms_run)))
+```
+
+### 7. Replacing NA values in sale_price column with the respective value broker_quote in that column :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$sale_price)))
+
+#replacing NA values in data set d with subsequent broker_quote value 
+x=which(is.na(d$sale_price))
+d$sale_price[x]=d$broker_quote[x]
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$sale_price)))
+```
+
+### 8. Replacing NA values in times_viewed column with median value in that column :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$times_viewed)))
+
+#replacing NA values in d1 data set with 0 to find median
+d1$times_viewed[which(is.na(d1$times_viewed))]<-0
+d1$times_viewed <- as.integer(d1$times_viewed) 
+m<-median(d1$times_viewed)
+d$times_viewed[which(is.na(d$times_viewed))]<-m
+d$sale_price[which(is.na(d$sale_price))]<-0
+d1$times_viewed<- as.integer(d1$times_viewed) 
+m<-median(d1$times_viewed)
+#Median times_viewed value:
+print(m)
+#replacing the NA value in d data set with median value
+d$times_viewed[which(is.na(d$times_viewed))]<-m
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$times_viewed)))
+
+```
+
+### 9. Omitting rows having NA values in body_type column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$body_type)))
+
+t<-d[,c("body_type")]
+d<- d[complete.cases(t), ]
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$body_type)))
+```
+
+### 10. Replacing NA values in transmission column with value occuring max times in that column :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$transmission)))
+
+#To find the value occurring max times in transmission column
+y <- na.omit(unique(d$transmission))
+h<-y[which.max(tabulate(match(d$transmission, y)))]
+
+#replacing the NA value in d data set with value occurring max times
+d$transmission[which(is.na(d$transmission))]<-h
+print(h)
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$transmission)))
+
+```
+
+### 11. Replacing NA values in variant column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$variant)))
+#Since there is no Na value so no need of data imputation.
+```
+
+### 12. Replacing NA values in assured_buy  column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$assured_buy)))
+#Since there is no Na value so no need of data imputation.
+```
+
+### 13. Omitting rows having NA values in registered_city column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$registered_city)))
+
+t<-d[,c("registered_city")]
+d<- d[complete.cases(t), ]
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$registered_city)))
+```
+
+### 14. Removing NA values in registered_state column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$registered_state)))
+#Since there is no Na value so no need of data imputation.
+
+```
+
+### 15. Replacing NA values in is_hot with value occuring max times in that column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$is_hot)))
+#To find the value occurring max times in is_hot column
+t <- na.omit(unique(d$is_hot))
+h<-t[which.max(tabulate(match(d$is_hot, t)))]
+
+#replacing the NA value in d data set with value occurring max times
+d$is_hot[which(is.na(d$is_hot))]<-h
+print(h)
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$is_hot)))
+```
+
+### 16. Replacing NA values in rto column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$rto)))
+#Since there is no Na value so no need of data imputation.
+```
+
+### 17. Replacing NA values in source column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$source)))
+#To find the value occurring max times in source column
+y <- na.omit(unique(d$source))
+h<-y[which.max(tabulate(match(d$source, y)))]
+
+#replacing the NA value in d data set with value occurring max times
+d$source[which(is.na(d$source))]<-h
+print(h)
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$source)))
+```
+
+### 18. Replacing NA values in make column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$make)))
+#Since there is no Na value so no need of data imputation.
+```
+
+### 19. Replacing NA values in model column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$model)))
+#Since there is no Na value so no need of data imputation.
+```
+
+### 20. Replacing NA values in car_availability column with value occuring max times in that column :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$car_availability)))
+#To find the value occurring max times in car_availability column
+y <- na.omit(unique(d$car_availability))
+h<-y[which.max(tabulate(match(d$car_availability, y)))]
+
+#replacing the NA value in d data set with value occurring max times
+d$car_availability[which(is.na(d$car_availability))]<-h
+print(h)
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$car_availability)))
+
+```
+
+### 21. Replacing NA values in total_owners column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$total_owners)))
+#Since there is no Na value so no need of data imputation.
+```
+
+### 22. Replacing NA values in broker_quote column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$broker_quote)))
+#Since there is no Na value so no need of data imputation.
+```
+
+### 23. Replacing NA values in original_price column :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$original_price)))
+
+#replacing NA values in d1 data set with 0 to find median
+d$original_price[which(is.na(d$original_price))]=d$sale_price[which(is.na(d$original_price))]+100000
+
+d=d[-c(which(d$sale_price>d$original_price)),]
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$original_price)))
+
+```
+
+### 24. Replacing NA values in car_rating column with value occuring max times in that column :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$car_rating)))
+
+#To find the value occurring max times in car_rating column
+y <- na.omit(unique(d$car_rating))
+h<-y[which.max(tabulate(match(d$car_rating, y)))]
+
+#replacing the NA value in d data set with value occurring max times
+d$car_rating[which(is.na(d$car_rating))]<-h
+print(h)
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$car_rating)))
+
+```
+
+
+
+### 26. Replacing NA values in fitness_certificate with value occuring max times in that column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$fitness_certificate)))
+
+#To find the value occurring max times in fitness_certificate column
+t <- na.omit(unique(d$fitness_certificate))
+h<-t[which.max(tabulate(match(d$fitness_certificate, t)))]
+
+#replacing the NA value in d data set with value occurring max times
+d$fitness_certificate[which(is.na(d$fitness_certificate))]<-h
+print(h)
+
+#check whether NA values are present in this column after data imputation :
+print(sum(is.na(d$fitness_certificate)))
+```
+
+### 27. Replacing NA values in emi_starts_from column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$emi_starts_from)))
+#Since there is no Na value so no need of data imputation.
+```
+
+### 28. Replacing NA values in booking_down_pymnt column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$booking_down_pymnt)))
+#Since there is no Na value so no need of data imputation.
+```
+
+### 29. Replacing NA values in reserved column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$reserved)))
+#Since there is no Na value so no need of data imputation.
+```
+
+### 30. Replacing NA values in warranty_avail column  :
+```{r}
+#To find the number of NA values in this column
+print(sum(is.na(d$warranty_avail)))
+#Since there is no Na value so no need of data imputation.
+```
+
+### 31.	Store the details in a comma separated values (csv) file. Also suppress the row numbers :
+```{r}
+print(sum(is.na(d)))
+write.csv(d,"cars_true_value_clean.csv",row.names = FALSE )
+```

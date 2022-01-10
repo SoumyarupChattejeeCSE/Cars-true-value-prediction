@@ -1,0 +1,115 @@
+---
+title: "Exploratory Data Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Name : Soumyarup Chatterjee
+## Registration Number : 19BCE1031
+
+## Name : Aditi Agarwal
+## Registration Number : 19BCE1159
+
+
+## Predictions models in R for cars_feature_new.csv datast :- 
+
+
+### To read cars_feature_new.csv :
+```{r}
+library(MASS)
+library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+library(caret)
+library(tidyverse)
+library(randomForest)
+library(rpart)
+
+df<-read.csv("cars_feature_new.csv")
+print(head(df))
+
+```
+
+### Predict percent_price of a car using multiple linear regression:
+```{r}
+set.seed(150)
+train_samples <- df$percent_price %>% createDataPartition(p=0.8,list=F)
+head(train_samples)
+train <- df[train_samples,]
+test <- df[-train_samples,]
+
+model=lm(percent_price~.,data = train)
+summary(model)
+
+pred_percent_price=model %>% predict(test)
+
+RMSE <- RMSE(pred_percent_price,test$percent_price)
+RMSE
+
+R2 <- R2(pred_percent_price,test$percent_price)
+R2
+
+## Visualizing the fit of the model
+hist(model$residuals)
+qqnorm(model$residuals,ylab = "Residuals")
+qqline(model$residuals)
+
+```
+
+### Predict percent_price of a car using decision tree regression:
+```{r}
+set.seed(150)
+train_samples <- df$percent_price %>% createDataPartition(p=0.8,list=F)
+head(train_samples)
+train <- df[train_samples,]
+test <- df[-train_samples,]
+
+model <- rpart(percent_price~., method = "anova", data = train)
+print(model)
+
+pred_percent_price=predict(model, test, method = "anova")
+
+plot(model, uniform = TRUE,main = "Car Percent Price Decision Tree using Regression")
+text(model, use.n = TRUE, cex = .6)
+
+RMSE <- RMSE(pred_percent_price,test$percent_price)
+RMSE
+
+R2 <- R2(pred_percent_price,test$percent_price)
+R2
+
+
+```
+
+### Predict percent_price of a car using random forest regression:
+```{r}
+set.seed(150)
+train_samples <- df$percent_price %>% createDataPartition(p=0.8,list=F)
+head(train_samples)
+train <- df[train_samples,]
+test <- df[-train_samples,]
+
+
+model = randomForest(percent_price~.,data=test,ntree = 500)
+pred_percent_price=predict(model,test)
+
+importance(model)
+varImpPlot(model)
+
+RMSE <- RMSE(pred_percent_price,test$percent_price)
+RMSE
+
+R2 <- R2(pred_percent_price,test$percent_price)
+R2
+
+```
+
+
+
+
+
+
+
+

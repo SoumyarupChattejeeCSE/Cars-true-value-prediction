@@ -1,0 +1,92 @@
+---
+title: "Exploratory Data Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Name : Soumyarup Chatterjee
+## Registration Number : 19BCE1031
+
+## Name : Aditi Agarwal
+## Registration Number : 19BCE1159
+
+
+## Feature selection and encoding in R  :- 
+
+
+### To read cars_true_value_clean.csv :
+```{r}
+library(MASS)
+library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+library(caret)
+library(tidyverse)
+
+df<-read.csv("cars_true_value_clean.csv")
+print(head(df))
+df$sale_price=as.integer(df$sale_price)
+
+#Encoding all the categorical columns in dataset:
+
+df$fitness_certificate[which(df$fitness_certificate==FALSE)]=0
+df$fitness_certificate[which(df$fitness_certificate==TRUE)]=1
+df$fitness_certificate=as.integer(df$fitness_certificate)
+
+df$body_type[which(df$body_type=="hatchback")]=1
+df$body_type[which(df$body_type=="suv")]=2
+df$body_type[which(df$body_type=="sedan")]=3
+df$body_type[which(df$body_type=="luxury suv")]=4
+df$body_type[which(df$body_type=="luxury sedan")]=5
+df$body_type=as.integer(df$body_type)
+
+df$fuel_type[which(df$fuel_type=="petrol")]=1
+df$fuel_type[which(df$fuel_type=="diesel")]=2
+df$fuel_type[which(df$fuel_type=="electric")]=3
+df$fuel_type[which(df$fuel_type=="petrol & lpg")]=4
+df$fuel_type[which(df$fuel_type=="petrol & cng")]=5
+df$fuel_type=as.integer(df$fuel_type)
+
+df$transmission[which(df$transmission=="manual")]=1
+df$transmission[which(df$transmission=="automatic")]=2
+df$transmission=as.integer(df$transmission)
+
+df$warranty_avail[which(df$warranty_avail==FALSE)]=0
+df$warranty_avail[which(df$warranty_avail==TRUE)]=1
+df$warranty_avail=as.integer(df$warranty_avail)
+
+df$car_rating[which(df$car_rating=="fair")]=1
+df$car_rating[which(df$car_rating=="good")]=2
+df$car_rating[which(df$car_rating=="great")]=3
+df$car_rating[which(df$car_rating=="overpriced")]=4
+
+df$assured_buy[which(df$assured_buy==FALSE)]=0
+df$assured_buy[which(df$assured_buy==TRUE)]=1
+df$assured_buy=as.integer(df$assured_buy)
+
+df$car_availability[which(df$car_availability=="in_stock")]=1
+df$car_availability[which(df$car_availability=="in_transit")]=2
+df$car_availability[which(df$car_availability=="out_of_stock")]=3
+df$car_availability[which(df$car_availability=="pickup_pending")]=4
+df$car_availability=as.integer(df$car_availability)
+
+#Creating a new column which will be our new normalized target variable:
+percent_price=df$sale_price/df$original_price
+df=mutate(df,percent_price)
+
+#Making a new dataset:
+df_new = df %>% select(percent_price,fuel_type,body_type,transmission,assured_buy,car_availability,total_owners,broker_quote,original_price,car_rating,fitness_certificate,emi_starts_from,booking_down_pymnt) 
+print(head(df_new))
+
+write.csv(df_new,"cars_feature_new.csv",row.names = FALSE )
+
+```
+
+
+
+
+
+
+
